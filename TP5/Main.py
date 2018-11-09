@@ -2,13 +2,6 @@
 import unicodedata
 
 def dictionnaire(fichier):
-    # Combien y a-t'il de mots dans le dictionnaire littre.zip ?
-    # -> 73192
-    # Combien y en a-t'il dans le dictionnaire dico.zip ?
-    # -> 336531
-    # Quelles sont les expressions Python à évaluer pour obtenir ces valeurs ?
-    # -> On utilise la fonction len() et dictionnaire()
-
     import zipfile
     import sys
 
@@ -24,6 +17,12 @@ def dictionnaire(fichier):
 littre = dictionnaire("ressources/littre.zip")
 dico = dictionnaire("ressources/dico.zip")
 
+# Combien y a-t'il de mots dans le dictionnaire littre.zip ?
+# -> 73192
+# Combien y en a-t'il dans le dictionnaire dico.zip ?
+# -> 336531
+# Quelles sont les expressions Python à évaluer pour obtenir ces valeurs ?
+# -> On utilise la fonction len() et dictionnaire()
 
 def mots_de_n_lettres(dico, n):
     words = []
@@ -89,9 +88,11 @@ def mots_debut_fin_n(dico, prefixe, suffixe, n):
     wordsStartWith = liste_mots_terminant_par(words, suffixe)
     return mots_de_n_lettres(wordsStartWith, n)
 
-## Combien y a-t-il de mots commençant par "cas", se terminant par "ns" et comportant 12 lettres dans le dictionnaire avec conjugaisons ?
-## len(mots_debut_fin_n(dico, "cas", "ns", 12))
-## 7
+# Combien y a-t-il de mots commençant par "cas", se terminant par "ns" et comportant 12 lettres dans le
+# dictionnaire avec conjugaisons ?
+#
+# >>> len(mots_debut_fin_n(dico, "cas", "ns", 12))
+# 7
 
 def mot_correspond(mot, motif):
     lettreAVerifier = []
