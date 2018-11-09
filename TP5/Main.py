@@ -1,7 +1,14 @@
 # coding=utf-8
-
+import unicodedata
 
 def dictionnaire(fichier):
+    # Combien y a-t'il de mots dans le dictionnaire littre.zip ?
+    # -> 73192
+    # Combien y en a-t'il dans le dictionnaire dico.zip ?
+    # -> 336531
+    # Quelles sont les expressions Python à évaluer pour obtenir ces valeurs ?
+    # -> On utilise la fonction len() et dictionnaire()
+
     import zipfile
     import sys
 
@@ -14,6 +21,10 @@ def dictionnaire(fichier):
     return [m for m in r if len(m) != 0]
 
 
+littre = dictionnaire("ressources/littre.zip")
+dico = dictionnaire("ressources/dico.zip")
+
+
 def mots_de_n_lettres(dico, n):
     words = []
     for word in dico:
@@ -21,10 +32,22 @@ def mots_de_n_lettres(dico, n):
             words.append(word)
     return words
 
+## mots_de_n_lettres(littre, 22)
+## -> [u'cristallographiquement', u'disproportionnellement']
+## len(mots_de_n_lettres(dico, 10))
+## -> 51402
 
 def mot_commence_par(mot, prefixe):
     return mot.startswith(prefixe)
 
+## >>> mot_commence_par("temoignage", "te")
+## True
+## >>> mot_commence_par("chouette", "choux")
+## False
+## >>> mot_commence_par("chou", "chouette")
+## False
+## >>> mot_commence_par("chouette", "clou")
+## False
 
 def liste_mots_commencent_par(dico, prefixe):
     words = []
@@ -33,6 +56,8 @@ def liste_mots_commencent_par(dico, prefixe):
             words.append(word)
     return words
 
+## >>> len(liste_mots_commencent_par(littre, "chou"))
+## 17
 
 def mot_terminant_par(mot, suffixe):
     suffixeLen = len(suffixe) - 1
@@ -55,25 +80,47 @@ def liste_mots_terminant_par(dico, suffixe):
             words.append(word)
     return words
 
+## Quels sont les mots du dictionnaire « le Littré » se terminant par "chou" ?
+## >>> liste_mots_terminant_par(littre, "chou")
+## [u'bachou', u'cachou', u'chabichou', u'chou']
 
 def mots_debut_fin_n(dico, prefixe, suffixe, n):
     words = liste_mots_commencent_par(dico, prefixe)
     wordsStartWith = liste_mots_terminant_par(words, suffixe)
     return mots_de_n_lettres(wordsStartWith, n)
 
+## Combien y a-t-il de mots commençant par "cas", se terminant par "ns" et comportant 12 lettres dans le dictionnaire avec conjugaisons ?
+## len(mots_debut_fin_n(dico, "cas", "ns", 12))
+## 7
 
 def mot_correspond(mot, motif):
-    motifLen = len(motif) - 1
-    letterToCheck = []
-    for count in range(motifLen):
-        if motif[count] != ".":
-            letterToCheck.append(count)
+    lettreAVerifier = []
+    noAccentMot = retirer_accentuation(mot)
+    noAccentMotif = retirer_accentuation(motif)
+
+    if len(mot) != len(motif):
+        return False
+
+    for index, lettre in enumerate(noAccentMotif):
+        if lettre != ".":
+            lettreAVerifier.append(index)
+
     check = True
-    for index in letterToCheck:
-        if mot[index] != motif[index]:
+
+    for lettre in lettreAVerifier:
+        if noAccentMot[lettre] != noAccentMotif[lettre]:
             check = False
+
     return check
 
+# >>> mot_correspond("tarte", "t..t.")
+# True
+# >>> mot_correspond("cheval", "c..v..l")
+# False
+# >>> mot_correspond("cheval", "c..v.l")
+# True
+# >>> mot_correspond("salut", ".al..")
+# True
 
 def liste_mots_motif(dico, motif):
     words = []
@@ -82,18 +129,19 @@ def liste_mots_motif(dico, motif):
             words.append(word)
     return words
 
+# Compter le nombre de mots correspondant au motif "p..h.s" dans le dictionnaire avec conjugaisons.
+# >>> len(liste_mots_motif(dico, "p..h.s"))
+# 12
 
 def retirer_accentuation(mot):
-    accents = u"àâçéèêëîïôöùûüÿ"
-    normaux = u"aaceeeeiioouuuy"
-    nouveaumot = ""
-    for lettre in mot:
-        index = accents.find(lettre)
-        if index >= 0:
-            nouveaumot += normaux[index]
-        else:
-            nouveaumot += lettre
-    return nouveaumot
+    try:
+        mot = unicode(mot, 'utf-8')
+    except (TypeError, NameError):
+        pass
+    text = unicodedata.normalize('NFD', mot)
+    text = text.encode('ascii', 'ignore')
+    text = text.decode("utf-8")
+    return str(text)
 
 
 def apparait(lettre, mot):
@@ -110,6 +158,14 @@ def mot_possible(mot, lettres):
 
     return len(lettreDansLeMot) == motLen
 
+# >>> mot_possible("lapin", "abilnpq")
+# True
+# >>> mot_possible("cheval", "abilnpq")
+# False
+# >>> mot_possible("chapeau", "abcehpuv")
+# True
+# >>> mot_possible("salut", "taslu")
+# True
 
 def mot_optimal(dico, lettres):
     words = []
@@ -131,6 +187,10 @@ def mot_possible_scrabble(mot, lettres):
 
     return len(lettreDansLeMot) == motLen
 
+# >>> mot_possible_scrabble("chapeau", "abcehpuv")
+# False
+# >>> mot_possible_scrabble("chapeau", "abcehpuva")
+# True
 
 def mot_optimal_scrabble(dico, lettres):
     words = []
