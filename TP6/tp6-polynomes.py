@@ -6,6 +6,7 @@
 from tkinter import *
 from datetime import datetime
 
+
 # Question 1
 # >>> t1 = [2, 4, 6, 8]
 # >>> len(t1)
@@ -79,17 +80,20 @@ def multiplication_scalaire(P, nb):
         nouveauPolynome.append(terme * nb)
     return nouveauPolynome
 
+
 def oppose(P):
     nouveauPolynome = []
     for terme in P:
         nouveauPolynome.append(-(terme))
     return nouveauPolynome
 
+
 def symetrique(P):
     nouveauPolynome = []
     for index, terme in enumerate(P):
         nouveauPolynome.append(-(terme) if index % 2 != 0 else terme)
     return nouveauPolynome
+
 
 def somme_poly(P1, P2):
     nouveauPolynome = []
@@ -107,6 +111,7 @@ def somme_poly(P1, P2):
                 nouveauPolynome.append(termeP2)
     return nouveauPolynome
 
+
 # Question 12
 # Deux arguments P1, P2, qui sont deux tableaux des termes des polynomes.
 
@@ -120,6 +125,7 @@ def derive_poly(P):
             continue
         nouveauPolynome.append(terme * index)
     return nouveauPolynome
+
 
 # derive_poly([18, 3, -25, -5, 7, 2])
 # [3, -50, -15, 28, 10]
@@ -142,6 +148,7 @@ def chaine_polynome(P):
             polynomeString += "+" + str(terme) + "X^" + str(index)
     return polynomeString
 
+
 # chaine_polynome([1,1,2,-3,4,5])
 # '1X^0+1X^1+2X^2+-3X^3+4X^4+5X^5'
 
@@ -149,11 +156,18 @@ def chaine_polynome(P):
 # chaine_polynome([3,6,0,-3,-4,0])
 # '3+6X-3X^3-4X^4'
 
+def mult_poly(P1, P2):
+    nouveauPolynome = [0] * (len(P1) + len(P2) - 1)
+    for indexP1, termeP1 in enumerate(P1):
+        for indexP2, termeP2 in enumerate(P2):
+            nouveauPolynome[indexP1 + indexP2] += termeP1 * termeP2
+    return nouveauPolynome
 
+# mult_poly([-2, 4, -3], [1, -1, 0, 1])
+# [-2, 6, -7, 1, 4, -3]
 
-
-
-
+# def comp_poly(P1, P2):
+    # TODO
 
 ########################################################################
 ### affichage graphique d'un polynôme
